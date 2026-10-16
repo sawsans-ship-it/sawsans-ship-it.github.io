@@ -1,277 +1,798 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>My Personal Portfolio</title>
+  <title>Cinéphile: A Celebration of Cinema</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Playfair Display for cinematic headers, Inter for crisp body -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,800;1,400;1,600&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            obsidian: {
+              950: '#050507',
+              900: '#0a0a0c',
+              800: '#121216',
+              700: '#1a1a22',
+              600: '#262630',
+            },
+            amber: {
+              gold: '#f59e0b',
+              deep: '#d97706',
+              glow: '#fbbf24',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
   <style>
-    /* CSS Variables for Light/Dark Theme */
-    :root {
-      --bg-color: #ffffff;
-      --text-color: #1f2937;
-      --card-bg: #f3f4f6;
-      --primary-color: #2563eb;
-      --primary-hover: #1d4ed8;
-      --nav-bg: rgba(255, 255, 255, 0.8);
-      --border-color: #e5e7eb;
+    /* Custom Film Grain Overlay */
+    .film-grain {
+      position: fixed;
+      top: 0; left: 0; width: 100vw; height: 100vh;
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
     }
 
-    [data-theme="dark"] {
-      --bg-color: #0f172a;
-      --text-color: #f8fafc;
-      --card-bg: #1e293b;
-      --primary-color: #3b82f6;
-      --primary-hover: #60a5fa;
-      --nav-bg: rgba(15, 23, 42, 0.8);
-      --border-color: #334155;
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0a0a0c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #262630;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f59e0b;
     }
 
-    /* Global Styles */
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      transition: background-color 0.3s, color 0.3s;
+    /* Subtle Gold Glow Effect */
+    .gold-glow {
+      box-shadow: 0 0 25px -5px rgba(245, 158, 11, 0.25);
     }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg-color);
-      color: var(--text-color);
-      line-height: 1.6;
-    }
-
-    /* Header & Navigation */
-    header {
-      position: sticky;
-      top: 0;
-      background-color: var(--nav-bg);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--border-color);
-      z-index: 100;
-    }
-
-    nav {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 1rem 2rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .logo {
-      font-weight: 700;
-      font-size: 1.25rem;
-      color: var(--primary-color);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 1.5rem;
-      align-items: center;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--text-color);
-      text-decoration: none;
-      font-weight: 500;
-    }
-
-    .nav-links a:hover {
-      color: var(--primary-color);
-    }
-
-    /* Dark Mode Button */
-    .theme-toggle {
-      background: none;
-      border: 1px solid var(--border-color);
-      color: var(--text-color);
-      padding: 0.4rem 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    /* Main Container */
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem;
-    }
-
-    /* Hero Section */
-    .hero {
-      padding: 4rem 0;
-      text-align: center;
-    }
-
-    .hero h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: #6b7280;
-      max-width: 600px;
-      margin: 0 auto 2rem auto;
-    }
-
-    .btn {
-      display: inline-block;
-      background-color: var(--primary-color);
-      color: #ffffff;
-      padding: 0.75rem 1.5rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    .btn:hover {
-      background-color: var(--primary-hover);
-    }
-
-    /* Projects Grid */
-    .section-title {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      text-align: center;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-      margin-bottom: 4rem;
-    }
-
-    .card {
-      background-color: var(--card-bg);
-      border-radius: 10px;
-      padding: 1.5rem;
-      border: 1px solid var(--border-color);
-    }
-
-    .card h3 {
-      margin-bottom: 0.5rem;
-    }
-
-    /* Contact Form */
-    .contact-form {
-      max-width: 600px;
-      margin: 0 auto 4rem auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-
-    .form-group input,
-    .form-group textarea {
-      padding: 0.75rem;
-      border-radius: 6px;
-      border: 1px solid var(--border-color);
-      background-color: var(--card-bg);
-      color: var(--text-color);
-    }
-
-    /* Footer */
-    footer {
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid var(--border-color);
-      color: #6b7280;
-      font-size: 0.9rem;
+    .gold-glow-lg {
+      box-shadow: 0 0 50px -10px rgba(245, 158, 11, 0.35);
     }
   </style>
 </head>
-<body>
+<body class="bg-obsidian-900 text-slate-200 font-sans min-h-screen antialiased flex flex-col selection:bg-amber-gold selection:text-obsidian-950">
 
-  <header>
-    <nav>
-      <a href="#" class="logo">MyBrand</a>
-      <ul class="nav-links">
-        <li><a href="#about">About</a></li>
-        <li><a href="#projects">Projects</a></li>
-        <li><a href="#contact">Contact</a></li>
-        <li><button class="theme-toggle" id="themeToggle">🌙 Dark</button></li>
-      </ul>
-    </nav>
+  <!-- Film Grain Atmosphere Effect -->
+  <div class="film-grain"></div>
+
+  <!-- HEADER & NAVIGATION -->
+  <header class="sticky top-0 z-40 bg-obsidian-950/80 backdrop-blur-md border-b border-obsidian-700/60 transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full bg-amber-gold/10 border border-amber-gold/40 flex items-center justify-center text-amber-gold group-hover:scale-105 transition-transform">
+          <i class="fa-solid font-serif text-lg">C</i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-serif text-xl sm:text-2xl font-extrabold tracking-widest text-slate-100 group-hover:text-amber-gold transition-colors">
+            CINÉPHILE
+          </span>
+          <span class="text-[9px] uppercase tracking-[0.25em] text-amber-gold/80 font-medium -mt-1">
+            Celebration of Cinema
+          </span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="#showcase" class="text-slate-300 hover:text-amber-gold transition-colors flex items-center gap-2">
+          <i class="fa-solid font-serif text-xs text-amber-gold">01.</i> Film Collection
+        </a>
+        <a href="#curator-notes" class="text-slate-300 hover:text-amber-gold transition-colors flex items-center gap-2">
+          <i class="fa-solid font-serif text-xs text-amber-gold">02.</i> Curator Notes
+        </a>
+        <button onclick="toggleJournalDrawer()" class="text-slate-300 hover:text-amber-gold transition-colors flex items-center gap-2">
+          <i class="fa-solid font-serif text-xs text-amber-gold">03.</i> Journal & Watchlist
+          <span id="navWatchlistBadge" class="ml-1 px-1.5 py-0.5 text-[10px] bg-amber-gold text-obsidian-950 font-bold rounded-full hidden">0</span>
+        </button>
+      </nav>
+
+      <!-- Right Header Actions -->
+      <div class="flex items-center space-x-4">
+        <!-- Open Watchlist Mobile/Desktop Quick Button -->
+        <button onclick="toggleJournalDrawer()" class="relative p-2.5 rounded-lg bg-obsidian-800 border border-obsidian-700 text-amber-gold hover:border-amber-gold/50 transition-all" title="Open Journal & Watchlist">
+          <i class="fa-solid fa-bookmark text-base"></i>
+          <span id="watchlistCountDot" class="absolute -top-1 -right-1 w-3 h-3 bg-amber-gold rounded-full border-2 border-obsidian-950 hidden"></span>
+        </button>
+
+        <!-- Ambient Glow / Accent Toggle Button -->
+        <button id="accentToggleBtn" onclick="toggleAccentGlow()" class="p-2.5 rounded-lg bg-obsidian-800 border border-obsidian-700 text-slate-400 hover:text-amber-gold hover:border-amber-gold/50 transition-all" title="Toggle Cinema Glow Atmosphere">
+          <i class="fa-solid fa-lightbulb text-base"></i>
+        </button>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <!-- Hero Section -->
-    <section class="hero" id="about">
-      <h1>Hi, I'm Alex 👋</h1>
-      <p>I build modern, high-performance web applications and digital experiences.</p>
-      <a href="#projects" class="btn">View Work</a>
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow">
+
+    <!-- HERO SECTION -->
+    <section class="relative min-h-[80vh] flex items-center justify-center overflow-hidden border-b border-obsidian-700/50 py-16 px-4">
+      <!-- Background Film Stills Overlay with Blur -->
+      <div class="absolute inset-0 z-0">
+        <img src="https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2000&auto=format&fit=crop" 
+             alt="Cinema atmosphere background" 
+             class="w-full h-full object-cover object-center opacity-25 filter blur-sm scale-105">
+        <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/80 to-obsidian-950/90"></div>
+        <div id="heroGlowElement" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-amber-gold/10 rounded-full blur-3xl pointer-events-none transition-opacity duration-700"></div>
+      </div>
+
+      <div class="relative z-10 max-w-4xl mx-auto text-center space-y-8">
+        
+        <!-- Cinephile Badge -->
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-obsidian-800/90 border border-amber-gold/30 text-amber-gold text-xs font-semibold uppercase tracking-widest backdrop-blur-md">
+          <i class="fa-solid fa-clapperboard text-amber-gold"></i>
+          <span>Curated Archival Selection</span>
+        </div>
+
+        <!-- Master Quote -->
+        <blockquote class="space-y-4">
+          <p class="font-serif text-2xl sm:text-4xl md:text-5xl font-light italic text-slate-100 leading-snug tracking-wide">
+            &ldquo;Cinema is a mirror that can reflect our deepest dreams.&rdquo;
+          </p>
+          <cite class="block font-sans text-xs sm:text-sm uppercase tracking-[0.3em] text-amber-gold/90 not-italic font-semibold">
+            &mdash; Andrei Tarkovsky
+          </cite>
+        </blockquote>
+
+        <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto font-light leading-relaxed">
+          Welcome to a sanctuary for true lovers of moving images. Explore auteur visions, rare cinematic gems, psychological thrillers, and timeless noir masterpieces.
+        </p>
+
+        <!-- CTA Action Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
+          <button onclick="triggerRandomPick()" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-amber-gold hover:bg-amber-glow text-obsidian-950 font-semibold text-sm tracking-wide transition-all duration-200 transform hover:-translate-y-0.5 gold-glow flex items-center justify-center gap-2">
+            <i class="fa-solid fa-dice-five"></i>
+            <span>Discover Today's Pick</span>
+          </button>
+          <a href="#showcase" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-obsidian-800/90 hover:bg-obsidian-700 text-slate-200 border border-obsidian-600 hover:border-amber-gold/40 font-medium text-sm transition-all duration-200 flex items-center justify-center gap-2">
+            <i class="fa-solid fa-film text-amber-gold"></i>
+            <span>Browse Showcase</span>
+          </a>
+        </div>
+
+      </div>
     </section>
 
-    <!-- Projects Section -->
-    <section id="projects">
-      <h2 class="section-title">Featured Projects</h2>
-      <div class="grid">
-        <div class="card">
-          <h3>E-Commerce Platform</h3>
-          <p>A full-stack online store featuring real-time inventory and Stripe payment integration.</p>
+    <!-- SEARCH & FILTER BAR -->
+    <section id="showcase" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-8 relative z-20">
+      <div class="bg-obsidian-800/90 backdrop-blur-lg border border-obsidian-700 p-4 sm:p-6 rounded-2xl shadow-2xl space-y-4">
+        <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+          
+          <!-- Title/Director Search Input -->
+          <div class="relative w-full md:w-96">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm"></i>
+            <input type="text" id="searchInput" oninput="filterFilms()" 
+                   placeholder="Search title, director, or keyword..." 
+                   class="w-full bg-obsidian-900 border border-obsidian-700 rounded-xl pl-11 pr-4 py-2.5 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-gold/80 transition-colors">
+          </div>
+
+          <!-- Quick Stats / Count -->
+          <div id="filmCounter" class="text-xs text-slate-400 font-mono text-center md:text-right">
+            Showing <span id="visibleCount" class="text-amber-gold font-bold">0</span> films
+          </div>
         </div>
-        <div class="card">
-          <h3>Task Management App</h3>
-          <p>A sleek productivity application built with drag-and-drop Kanban boards.</p>
-        </div>
-        <div class="card">
-          <h3>Analytics Dashboard</h3>
-          <p>Interactive data visualization suite for tracking key performance metrics.</p>
+
+        <!-- Genre Pill Tags -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none text-xs" id="genreFilterContainer">
+          <button onclick="setGenreFilter('All')" class="genre-btn active px-4 py-2 rounded-lg bg-amber-gold text-obsidian-950 font-semibold transition-all whitespace-nowrap">
+            All Genres
+          </button>
+          <button onclick="setGenreFilter('Sci-Fi')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            Sci-Fi
+          </button>
+          <button onclick="setGenreFilter('Noir')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            Noir
+          </button>
+          <button onclick="setGenreFilter('French New Wave')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            French New Wave
+          </button>
+          <button onclick="setGenreFilter('Psychological Thriller')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            Psychological Thriller
+          </button>
+          <button onclick="setGenreFilter('Neo-Noir')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            Neo-Noir
+          </button>
+          <button onclick="setGenreFilter('Surrealism')" class="genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap">
+            Surrealism
+          </button>
         </div>
       </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact">
-      <h2 class="section-title">Get in Touch</h2>
-      <form class="contact-form" onsubmit="event.preventDefault(); alert('Message sent!');">
-        <div class="form-group">
-          <label for="name">Name</label>
-          <input type="text" id="name" required placeholder="Your name">
-        </div>
-        <div class="form-group">
-          <label for="email">Email</label>
-          <input type="email" id="email" required placeholder="your.email@example.com">
-        </div>
-        <div class="form-group">
-          <label for="message">Message</label>
-          <textarea id="message" rows="4" required placeholder="How can I help you?"></textarea>
-        </div>
-        <button type="submit" class="btn">Send Message</button>
-      </form>
+    <!-- FILM SHOWCASE GRID -->
+    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div id="filmGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Rendered via JavaScript -->
+      </div>
+
+      <!-- Empty Filter State -->
+      <div id="emptyState" class="hidden text-center py-20 space-y-4">
+        <i class="fa-solid fa-film text-4xl text-obsidian-700"></i>
+        <h3 class="text-lg font-serif text-slate-300">No films match your search criteria</h3>
+        <p class="text-sm text-slate-500 max-w-sm mx-auto">Try resetting your genre filter or searching for a different title or director.</p>
+        <button onclick="resetFilters()" class="px-4 py-2 bg-obsidian-800 border border-obsidian-700 hover:border-amber-gold/50 text-amber-gold rounded-lg text-xs font-semibold">
+          Reset Filters
+        </button>
+      </div>
     </section>
+
+    <!-- CURATOR NOTES & ESSAY SECTION -->
+    <section id="curator-notes" class="bg-obsidian-950 border-t border-b border-obsidian-800 py-16 px-4 sm:px-6 lg:px-8">
+      <div class="max-w-4xl mx-auto space-y-8">
+        <div class="text-center space-y-2">
+          <span class="text-xs font-mono uppercase tracking-widest text-amber-gold">Editorial Focus</span>
+          <h2 class="font-serif text-3xl sm:text-4xl font-bold text-slate-100">Curator Notes</h2>
+          <div class="w-12 h-0.5 bg-amber-gold/60 mx-auto mt-2"></div>
+        </div>
+
+        <div class="bg-obsidian-900 border border-obsidian-800 p-6 sm:p-8 rounded-2xl space-y-6 relative overflow-hidden">
+          <div class="absolute top-0 right-0 w-32 h-32 bg-amber-gold/5 rounded-full blur-2xl"></div>
+          
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-full bg-obsidian-800 border border-amber-gold/40 flex items-center justify-center font-serif text-amber-gold text-xl font-bold">
+              É
+            </div>
+            <div>
+              <h4 class="font-serif text-lg font-semibold text-slate-100">The Power of Shadow & Time</h4>
+              <p class="text-xs text-amber-gold/80 font-mono">By Chief Curator &bull; Autumn Retrospective</p>
+            </div>
+          </div>
+
+          <p class="text-slate-300 text-sm leading-relaxed font-light">
+            Cinema operates at the intersection of time and light. Unlike painting or literature, film captures the actual weight of passing seconds. In this selection, we examine directors who treat light not merely as illumination, but as narrative substance—from Tarkovsky’s reflective water to Wong Kar-wai’s saturated neon nostalgia.
+          </p>
+
+          <div class="p-4 bg-obsidian-950/60 rounded-xl border-l-2 border-amber-gold text-xs italic text-slate-400">
+            &ldquo;To make a film is to retain time, to capture it in a bottle so that future generations may examine the pulse of an era.&rdquo;
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <footer>
-    <p>&copy; 2026 Alex Dev. Built with HTML, CSS, and JS.</p>
+  <!-- FOOTER -->
+  <footer class="bg-obsidian-950 border-t border-obsidian-800/80 py-10 px-4">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-6 text-slate-500 text-xs">
+      <div class="flex items-center gap-3">
+        <span class="font-serif text-amber-gold font-bold tracking-widest">CINÉPHILE</span>
+        <span>&bull;</span>
+        <span>Dedicated to the Art of Motion Pictures</span>
+      </div>
+      <p>&copy; 2026 Cinéphile Archives. Curated with precision.</p>
+    </div>
   </footer>
 
+  <!-- TODAY'S PICK / RANDOM FILM MODAL -->
+  <div id="randomPickModal" class="fixed inset-0 z-50 bg-obsidian-950/80 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div class="bg-obsidian-900 border border-amber-gold/40 max-w-lg w-full rounded-2xl overflow-hidden shadow-2xl transform scale-95 transition-transform duration-300 relative gold-glow-lg" id="randomPickCard">
+      <!-- Modal Header Close Button -->
+      <button onclick="closeRandomPickModal()" class="absolute top-4 right-4 z-20 w-8 h-8 bg-obsidian-950/80 hover:bg-amber-gold hover:text-obsidian-950 rounded-full text-slate-300 flex items-center justify-center transition-colors">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="relative h-64">
+        <img id="modalImg" src="" alt="" class="w-full h-full object-cover">
+        <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/40 to-transparent"></div>
+        <div class="absolute bottom-4 left-6 right-6">
+          <span id="modalGenre" class="px-2.5 py-0.5 rounded-full text-[10px] font-semibold bg-amber-gold text-obsidian-950 uppercase tracking-wider"></span>
+          <h3 id="modalTitle" class="font-serif text-2xl font-bold text-slate-100 mt-1"></h3>
+          <p id="modalDirector" class="text-xs text-amber-gold/90 font-mono"></p>
+        </div>
+      </div>
+
+      <div class="p-6 space-y-4">
+        <p id="modalNotes" class="text-xs text-slate-300 italic leading-relaxed"></p>
+        <div class="flex items-center justify-between text-xs text-slate-400 pt-2 border-t border-obsidian-800">
+          <span id="modalYear"></span>
+          <span id="modalRating" class="text-amber-gold font-semibold"></span>
+        </div>
+        <button id="modalWatchlistBtn" class="w-full py-2.5 rounded-xl bg-amber-gold text-obsidian-950 font-bold text-xs uppercase tracking-wider hover:bg-amber-glow transition-colors">
+          Add To Watchlist
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATCHLIST & JOURNAL DRAWER (SLIDE-OVER) -->
+  <div id="journalDrawer" class="fixed inset-0 z-50 overflow-hidden opacity-0 pointer-events-none transition-opacity duration-300">
+    <!-- Backdrop -->
+    <div onclick="toggleJournalDrawer()" class="absolute inset-0 bg-obsidian-950/80 backdrop-blur-sm"></div>
+
+    <div class="absolute inset-y-0 right-0 max-w-full flex pl-10">
+      <div class="w-screen max-w-md bg-obsidian-900 border-l border-obsidian-700 shadow-2xl flex flex-col">
+        
+        <!-- Drawer Header -->
+        <div class="p-6 bg-obsidian-950 border-b border-obsidian-800 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <i class="fa-solid fa-journal-whills text-amber-gold text-xl"></i>
+            <div>
+              <h2 class="font-serif text-lg font-bold text-slate-100">Film Journal & Watchlist</h2>
+              <p class="text-[11px] text-slate-400">Personal Curation & Notes</p>
+            </div>
+          </div>
+          <button onclick="toggleJournalDrawer()" class="text-slate-400 hover:text-amber-gold p-2">
+            <i class="fa-solid fa-xmark text-lg"></i>
+          </button>
+        </div>
+
+        <!-- Tab Switching Header -->
+        <div class="flex border-b border-obsidian-800 text-xs font-semibold">
+          <button onclick="switchDrawerTab('watchlist')" id="tabWatchlistBtn" class="flex-1 py-3 text-center border-b-2 border-amber-gold text-amber-gold">
+            Saved Watchlist (<span id="drawerWatchlistCount">0</span>)
+          </button>
+          <button onclick="switchDrawerTab('journal')" id="tabJournalBtn" class="flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200">
+            Personal Notes (<span id="drawerJournalCount">0</span>)
+          </button>
+        </div>
+
+        <!-- Drawer Body Content -->
+        <div class="flex-1 overflow-y-auto p-6 space-y-6">
+          
+          <!-- WATCHLIST TAB CONTENT -->
+          <div id="watchlistTabSection" class="space-y-4">
+            <div id="watchlistContainer" class="space-y-3">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- JOURNAL NOTES TAB CONTENT -->
+          <div id="journalTabSection" class="hidden space-y-4">
+            
+            <!-- Custom Journal Entry Form -->
+            <form onsubmit="saveCustomJournalNote(event)" class="bg-obsidian-950 p-4 rounded-xl border border-obsidian-800 space-y-3">
+              <h4 class="text-xs font-semibold text-amber-gold uppercase tracking-wider">Add Cinephile Reflection</h4>
+              <input type="text" id="journalFilmTitle" placeholder="Film Title..." required
+                     class="w-full bg-obsidian-900 border border-obsidian-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-gold">
+              <textarea id="journalNoteText" rows="3" placeholder="Write your thoughts on cinematography, themes, or direction..." required
+                        class="w-full bg-obsidian-900 border border-obsidian-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-gold"></textarea>
+              <button type="submit" class="w-full py-2 bg-amber-gold text-obsidian-950 rounded-lg text-xs font-bold hover:bg-amber-glow transition-colors">
+                Save Reflection
+              </button>
+            </form>
+
+            <div id="journalNotesContainer" class="space-y-3 pt-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    // Simple Dark/Light Theme Toggle
-    const themeToggle = document.getElementById('themeToggle');
-    themeToggle.addEventListener('click', () => {
-      const currentTheme = document.documentElement.getAttribute('data-theme');
-      if (currentTheme === 'dark') {
-        document.documentElement.removeAttribute('data-theme');
-        themeToggle.textContent = '🌙 Dark';
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        themeToggle.textContent = '☀️ Light';
+    /* ==========================================================================
+       CURATED CINEPHILE FILM DATABASE
+       ========================================================================== */
+    const filmDatabase = [
+      {
+        id: 'stalker-1979',
+        title: 'Stalker',
+        director: 'Andrei Tarkovsky',
+        year: 1979,
+        rating: '4.9',
+        genre: 'Sci-Fi',
+        poster: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=800&auto=format&fit=crop',
+        quote: 'A expedition into a forbidden Zone where physical laws bend to human subconscious desires.',
+        review: 'A meditative masterpiece on faith and human desire. The monochrome-to-color transition remains unmatched.'
+      },
+      {
+        id: 'blade-runner-1982',
+        title: 'Blade Runner',
+        director: 'Ridley Scott',
+        year: 1982,
+        rating: '4.8',
+        genre: 'Neo-Noir',
+        poster: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800&auto=format&fit=crop',
+        quote: 'All those moments will be lost in time, like tears in rain.',
+        review: 'The quintessential Cyberpunk Neo-Noir. Vangelis synthesizer score paired with rain-slicked dystopia.'
+      },
+      {
+        id: 'breathless-1960',
+        title: 'Breathless (À bout de souffle)',
+        director: 'Jean-Luc Godard',
+        year: 1960,
+        rating: '4.7',
+        genre: 'French New Wave',
+        poster: 'https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=800&auto=format&fit=crop',
+        quote: 'Become immortal, and then die.',
+        review: 'Revolutionized cinema grammar with energetic jump cuts, natural lighting, and cool existentialism.'
+      },
+      {
+        id: 'persona-1966',
+        title: 'Persona',
+        director: 'Ingmar Bergman',
+        year: 1966,
+        rating: '4.9',
+        genre: 'Psychological Thriller',
+        poster: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=800&auto=format&fit=crop',
+        quote: 'The hopeless dream of being, not seeming.',
+        review: 'A haunting psychological duel between an actress who stops speaking and her dedicated nurse.'
+      },
+      {
+        id: 'chinatown-1974',
+        title: 'Chinatown',
+        director: 'Roman Polanski',
+        year: 1974,
+        rating: '4.8',
+        genre: 'Noir',
+        poster: 'https://images.unsplash.com/photo-1514533450685-4493e01d1fdc?q=80&w=800&auto=format&fit=crop',
+        quote: 'Forget it, Jake. It’s Chinatown.',
+        review: 'Sun-drenched neo-noir with Robert Towne’s razor-sharp screenplay on corruption and tragic fates.'
+      },
+      {
+        id: 'mulholland-dr-2001',
+        title: 'Mulholland Drive',
+        director: 'David Lynch',
+        year: 2001,
+        rating: '4.9',
+        genre: 'Surrealism',
+        poster: 'https://images.unsplash.com/photo-1500462918059-b1a0cb512f1d?q=80&w=800&auto=format&fit=crop',
+        quote: 'A love story in the city of dreams.',
+        review: 'Lynch’s hypnotic labyrinth through Hollywood dreams and nightmare realities. Unforgettable Silencio sequence.'
       }
-    });
+    ];
+
+    /* ==========================================================================
+       APP STATE MANAGEMENT
+       ========================================================================== */
+    let activeGenre = 'All';
+    let searchQuery = '';
+    let watchlist = JSON.parse(localStorage.getItem('cinephile_watchlist')) || [];
+    let favorites = JSON.parse(localStorage.getItem('cinephile_favorites')) || [];
+    let journalNotes = JSON.parse(localStorage.getItem('cinephile_notes')) || [
+      {
+        id: '1',
+        title: 'Stalker',
+        text: 'The sound design in the handcar scene creates a hypnosis unequaled in modern cinema.',
+        date: 'Oct 2026'
+      }
+    ];
+
+    /* ==========================================================================
+       INITIALIZATION & RENDER
+       ========================================================================== */
+    window.onload = function() {
+      renderFilms();
+      updateBadges();
+      renderWatchlistDrawer();
+      renderJournalNotes();
+    };
+
+    /* ==========================================================================
+       FILM GRID RENDER
+       ========================================================================== */
+    function renderFilms() {
+      const grid = document.getElementById('filmGrid');
+      const emptyState = document.getElementById('emptyState');
+      grid.innerHTML = '';
+
+      const filtered = filmDatabase.filter(film => {
+        const matchesGenre = activeGenre === 'All' || film.genre === activeGenre;
+        const matchesSearch = film.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              film.director.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                              film.genre.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesGenre && matchesSearch;
+      });
+
+      document.getElementById('visibleCount').textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        emptyState.classList.remove('hidden');
+      } else {
+        emptyState.classList.add('hidden');
+      }
+
+      filtered.forEach(film => {
+        const isWatchlisted = watchlist.includes(film.id);
+        const isFavorite = favorites.includes(film.id);
+
+        const card = document.createElement('article');
+        card.className = 'group bg-obsidian-800/60 border border-obsidian-700/80 hover:border-amber-gold/50 rounded-2xl overflow-hidden transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between';
+        
+        card.innerHTML = `
+          <div>
+            <!-- Poster Wrapper -->
+            <div class="relative h-72 sm:h-80 overflow-hidden bg-obsidian-950">
+              <img src="${film.poster}" alt="${film.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90 group-hover:opacity-100">
+              <div class="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-transparent to-transparent"></div>
+              
+              <!-- Genre Tag -->
+              <span class="absolute top-3 left-3 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-obsidian-950/80 text-amber-gold border border-amber-gold/30 backdrop-blur-md">
+                ${film.genre}
+              </span>
+
+              <!-- Favorite Action Button -->
+              <button onclick="toggleFavorite('${film.id}')" class="absolute top-3 right-3 w-8 h-8 rounded-full bg-obsidian-950/80 text-slate-300 hover:text-amber-gold flex items-center justify-center backdrop-blur-md transition-colors" title="Mark as Favorite">
+                <i class="${isFavorite ? 'fa-solid text-amber-gold' : 'fa-regular'} fa-heart text-sm"></i>
+              </button>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-5 space-y-3">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <h3 class="font-serif text-xl font-bold text-slate-100 group-hover:text-amber-gold transition-colors">${film.title}</h3>
+                  <p class="text-xs text-amber-gold/90 font-mono mt-0.5">${film.director} &bull; ${film.year}</p>
+                </div>
+                <div class="flex items-center gap-1 text-xs font-bold text-amber-gold bg-amber-gold/10 px-2 py-1 rounded-md border border-amber-gold/20">
+                  <i class="fa-solid fa-star text-[10px]"></i>
+                  <span>${film.rating}</span>
+                </div>
+              </div>
+
+              <p class="text-xs text-slate-300 italic font-light line-clamp-2 leading-relaxed">
+                &ldquo;${film.quote}&rdquo;
+              </p>
+
+              <div class="pt-2 border-t border-obsidian-700/50">
+                <p class="text-[11px] text-slate-400 line-clamp-2">${film.review}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Card Footer Actions -->
+          <div class="p-5 pt-0">
+            <button onclick="toggleWatchlist('${film.id}')" class="w-full py-2.5 rounded-xl text-xs font-semibold uppercase tracking-wider transition-all flex items-center justify-center gap-2 ${
+              isWatchlisted 
+                ? 'bg-amber-gold/20 border border-amber-gold text-amber-gold' 
+                : 'bg-obsidian-900 hover:bg-obsidian-700 text-slate-300 border border-obsidian-700'
+            }">
+              <i class="fa-solid ${isWatchlisted ? 'fa-check text-amber-gold' : 'fa-plus'}"></i>
+              <span>${isWatchlisted ? 'In Watchlist' : 'Add to Watchlist'}</span>
+            </button>
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+    }
+
+    /* ==========================================================================
+       INTERACTIVE ACTIONS & TOGGLES
+       ========================================================================== */
+    function setGenreFilter(genre) {
+      activeGenre = genre;
+      document.querySelectorAll('.genre-btn').forEach(btn => {
+        if (btn.textContent.trim() === genre || (genre === 'All' && btn.textContent.trim() === 'All Genres')) {
+          btn.className = 'genre-btn active px-4 py-2 rounded-lg bg-amber-gold text-obsidian-950 font-semibold transition-all whitespace-nowrap';
+        } else {
+          btn.className = 'genre-btn px-4 py-2 rounded-lg bg-obsidian-900 border border-obsidian-700 text-slate-300 hover:border-amber-gold/50 transition-all whitespace-nowrap';
+        }
+      });
+      renderFilms();
+    }
+
+    function filterFilms() {
+      searchQuery = document.getElementById('searchInput').value;
+      renderFilms();
+    }
+
+    function resetFilters() {
+      searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      setGenreFilter('All');
+    }
+
+    function toggleWatchlist(id) {
+      if (watchlist.includes(id)) {
+        watchlist = watchlist.filter(item => item !== id);
+      } else {
+        watchlist.push(id);
+      }
+      localStorage.setItem('cinephile_watchlist', JSON.stringify(watchlist));
+      updateBadges();
+      renderFilms();
+      renderWatchlistDrawer();
+    }
+
+    function toggleFavorite(id) {
+      if (favorites.includes(id)) {
+        favorites = favorites.filter(item => item !== id);
+      } else {
+        favorites.push(id);
+      }
+      localStorage.setItem('cinephile_favorites', JSON.stringify(favorites));
+      renderFilms();
+    }
+
+    function updateBadges() {
+      const count = watchlist.length;
+      const navBadge = document.getElementById('navWatchlistBadge');
+      const dot = document.getElementById('watchlistCountDot');
+
+      if (count > 0) {
+        navBadge.textContent = count;
+        navBadge.classList.remove('hidden');
+        dot.classList.remove('hidden');
+      } else {
+        navBadge.classList.add('hidden');
+        dot.classList.add('hidden');
+      }
+
+      document.getElementById('drawerWatchlistCount').textContent = count;
+    }
+
+    /* ==========================================================================
+       RANDOM PICK / DISCOVER FEATURE
+       ========================================================================== */
+    function triggerRandomPick() {
+      const randomFilm = filmDatabase[Math.floor(Math.random() * filmDatabase.length)];
+      
+      document.getElementById('modalImg').src = randomFilm.poster;
+      document.getElementById('modalTitle').textContent = randomFilm.title;
+      document.getElementById('modalDirector').textContent = `${randomFilm.director} (${randomFilm.year})`;
+      document.getElementById('modalGenre').textContent = randomFilm.genre;
+      document.getElementById('modalNotes').textContent = `"${randomFilm.quote}" — ${randomFilm.review}`;
+      document.getElementById('modalYear').textContent = `Year: ${randomFilm.year}`;
+      document.getElementById('modalRating').textContent = `★ ${randomFilm.rating}`;
+
+      const modalBtn = document.getElementById('modalWatchlistBtn');
+      const isWatchlisted = watchlist.includes(randomFilm.id);
+      modalBtn.textContent = isWatchlisted ? 'Remove from Watchlist' : 'Add to Watchlist';
+      modalBtn.onclick = function() {
+        toggleWatchlist(randomFilm.id);
+        closeRandomPickModal();
+      };
+
+      const modal = document.getElementById('randomPickModal');
+      const card = document.getElementById('randomPickCard');
+      modal.classList.remove('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-95');
+      card.classList.add('scale-100');
+    }
+
+    function closeRandomPickModal() {
+      const modal = document.getElementById('randomPickModal');
+      const card = document.getElementById('randomPickCard');
+      modal.classList.add('opacity-0', 'pointer-events-none');
+      card.classList.remove('scale-100');
+      card.classList.add('scale-95');
+    }
+
+    /* ==========================================================================
+       DRAWER & JOURNAL LOGIC
+       ========================================================================== */
+    function toggleJournalDrawer() {
+      const drawer = document.getElementById('journalDrawer');
+      if (drawer.classList.contains('opacity-0')) {
+        drawer.classList.remove('opacity-0', 'pointer-events-none');
+      } else {
+        drawer.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function switchDrawerTab(tab) {
+      const watchlistSection = document.getElementById('watchlistTabSection');
+      const journalSection = document.getElementById('journalTabSection');
+      const tabWatchlistBtn = document.getElementById('tabWatchlistBtn');
+      const tabJournalBtn = document.getElementById('tabJournalBtn');
+
+      if (tab === 'watchlist') {
+        watchlistSection.classList.remove('hidden');
+        journalSection.classList.add('hidden');
+        tabWatchlistBtn.className = 'flex-1 py-3 text-center border-b-2 border-amber-gold text-amber-gold font-bold';
+        tabJournalBtn.className = 'flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200';
+      } else {
+        watchlistSection.classList.add('hidden');
+        journalSection.classList.remove('hidden');
+        tabJournalBtn.className = 'flex-1 py-3 text-center border-b-2 border-amber-gold text-amber-gold font-bold';
+        tabWatchlistBtn.className = 'flex-1 py-3 text-center border-b-2 border-transparent text-slate-400 hover:text-slate-200';
+      }
+    }
+
+    function renderWatchlistDrawer() {
+      const container = document.getElementById('watchlistContainer');
+      container.innerHTML = '';
+
+      if (watchlist.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-slate-500 space-y-2">
+            <i class="fa-solid fa-bookmark text-2xl"></i>
+            <p class="text-xs">Your watchlist is currently empty.</p>
+          </div>
+        `;
+        return;
+      }
+
+      watchlist.forEach(id => {
+        const film = filmDatabase.find(f => f.id === id);
+        if (!film) return;
+
+        const item = document.createElement('div');
+        item.className = 'flex items-center gap-3 p-3 bg-obsidian-950 border border-obsidian-800 rounded-xl';
+        item.innerHTML = `
+          <img src="${film.poster}" class="w-12 h-16 object-cover rounded-md" alt="${film.title}">
+          <div class="flex-1 min-w-0">
+            <h5 class="text-xs font-bold text-slate-200 truncate">${film.title}</h5>
+            <p class="text-[10px] text-amber-gold">${film.director} (${film.year})</p>
+          </div>
+          <button onclick="toggleWatchlist('${film.id}')" class="text-slate-500 hover:text-red-400 p-2">
+            <i class="fa-solid fa-trash-can text-xs"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function renderJournalNotes() {
+      const container = document.getElementById('journalNotesContainer');
+      document.getElementById('drawerJournalCount').textContent = journalNotes.length;
+      container.innerHTML = '';
+
+      journalNotes.forEach(note => {
+        const item = document.createElement('div');
+        item.className = 'p-3 bg-obsidian-950 border border-obsidian-800 rounded-xl space-y-1 relative';
+        item.innerHTML = `
+          <div class="flex items-center justify-between">
+            <h5 class="text-xs font-bold text-amber-gold">${note.title}</h5>
+            <span class="text-[9px] text-slate-500 font-mono">${note.date}</span>
+          </div>
+          <p class="text-xs text-slate-300 italic leading-relaxed">&ldquo;${note.text}&rdquo;</p>
+        `;
+        container.appendChild(item);
+      });
+    }
+
+    function saveCustomJournalNote(e) {
+      e.preventDefault();
+      const titleInput = document.getElementById('journalFilmTitle');
+      const textInput = document.getElementById('journalNoteText');
+
+      const newNote = {
+        id: Date.now().toString(),
+        title: titleInput.value,
+        text: textInput.value,
+        date: 'Oct 2026'
+      };
+
+      journalNotes.unshift(newNote);
+      localStorage.setItem('cinephile_notes', JSON.stringify(journalNotes));
+
+      titleInput.value = '';
+      textInput.value = '';
+      renderJournalNotes();
+    }
+
+    /* Accent Ambient Toggle */
+    let glowActive = true;
+    function toggleAccentGlow() {
+      const glow = document.getElementById('heroGlowElement');
+      glowActive = !glowActive;
+      glow.style.opacity = glowActive ? '1' : '0';
+    }
   </script>
 </body>
 </html>

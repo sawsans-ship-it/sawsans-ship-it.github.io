@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Today's Pick — Cinéphile</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d10;
+      --card-bg: rgba(22, 27, 34, 0.85);
+      --border: rgba(255, 255, 255, 0.1);
+      --gold: #d4af37;
+      --gold-hover: #b8972e;
+      --text-main: #f0f6fc;
+      --text-muted: #8b949e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Spotlight Background */
+    .ambient-glow {
+      position: fixed;
+      top: 15%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(212, 175, 55, 0.12) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Navigation Bar */
+    header {
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(11, 13, 16, 0.7);
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.2rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .back-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover {
+      color: var(--gold);
+    }
+
+    .brand-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+
+    /* Spotlight Card Layout */
+    main {
+      flex: 1;
+      max-width: 1100px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    .spotlight-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+    }
+
+    @media (max-width: 860px) {
+      .spotlight-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .poster-wrapper {
+      position: relative;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    .poster-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .spotlight-card:hover .poster-img {
+      transform: scale(1.03);
+    }
+
+    .details-pane {
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .badge-row {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 0.3rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-weight: 600;
+    }
+
+    .badge.gold {
+      background: rgba(212, 175, 55, 0.15);
+      border-color: rgba(212, 175, 55, 0.4);
+      color: var(--gold);
+    }
+
+    .film-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.4rem;
+      line-height: 1.15;
+      margin-bottom: 0.5rem;
+      letter-spacing: 1px;
+    }
+
+    .film-director {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .film-synopsis {
+      line-height: 1.8;
+      color: #d1d5db;
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Technical Specs Grid */
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      padding: 1.2rem;
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      margin-bottom: 2rem;
+    }
+
+    .spec-item span {
+      display: block;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.2rem;
+    }
+
+    .spec-item strong {
+      font-size: 0.95rem;
+      color: var(--text-main);
+    }
+
+    /* Actions */
+    .actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-reroll {
+      background: var(--gold);
+      color: #0b0d10;
+      border: none;
+      padding: 0.85rem 1.8rem;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-reroll:hover {
+      background: var(--gold-hover);
+      transform: translateY(-2px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      padding: 0.85rem 1.5rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="ambient-glow"></div>
+
+  <header>
+    <div class="nav-container">
+      <a href="index.html" class="back-link">← Return to Collection</a>
+      <div class="brand-title">CINÉPHILE</div>
+    </div>
+  </header>
+
+  <main>
+    <article class="spotlight-card">
+      <div class="poster-wrapper">
+        <img id="filmPoster" class="poster-img" src="" alt="Movie Poster">
+      </div>
+
+      <div class="details-pane">
+        <div>
+          <div class="badge-row">
+            <span class="badge gold">Daily Curator's Choice</span>
+            <span id="filmGenre" class="badge">Genre</span>
+            <span id="filmYear" class="badge">Year</span>
+          </div>
+
+          <h1 id="filmTitle" class="film-title">Loading...</h1>
+          <p id="filmDirector" class="film-director">Director: —</p>
+          <p id="filmSynopsis" class="film-synopsis">Loading synopsis...</p>
+
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span>Runtime</span>
+              <strong id="filmRuntime">—</strong>
+            </div>
+            <div class="spec-item">
+              <span>Aspect Ratio</span>
+              <strong id="filmRatio">—</strong>
+            </div>
+            <div class="spec-item">
+              <span>Letterboxd / Metacritic</span>
+              <strong id="filmRating">—</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn-reroll" onclick="pickRandomFilm()">🎲 Pick Another Film</button>
+          <a href="index.html" class="btn-outline">Browse Full Archive</a>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer>
+    <p>CINÉPHILE ARCHIVE &bull; CURATED FOR ART-HOUSE & CLASSIC CINEMA</p>
+  </footer>
+
+  <script>
+    const filmDatabase = [
+      {
+        title: "Stalker",
+        year: "1979",
+        director: "Andrei Tarkovsky",
+        genre: "Sci-Fi / Philosophical",
+        runtime: "162 mins",
+        ratio: "1.37 : 1",
+        rating: "4.4 / 5",
+        synopsis: "A guide leads two men through an overgrown, treacherous, post-apocalyptic wasteland known as 'The Zone' to reach a mythical room that grants a person's deepest inner desires.",
+        poster: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        title: "In the Mood for Love",
+        year: "2000",
+        director: "Wong Kar-wai",
+        genre: "Romantic Drama",
+        runtime: "98 mins",
+        ratio: "1.66 : 1",
+        rating: "4.4 / 5",
+        synopsis: "In 1962 Hong Kong, two neighbors form an intimate, unspoken bond after suspecting their respective spouses of having an extramarital affair together.",
+        poster: "https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        title: "Blade Runner",
+        year: "1982",
+        director: "Ridley Scott",
+        genre: "Neo-Noir / Cyberpunk",
+        runtime: "117 mins",
+        ratio: "2.39 : 1",
+        rating: "4.2 / 5",
+        synopsis: "In a rain-soaked, dystopian 2019 Los Angeles, a burnt-out blade runner is assigned to hunt down four rogue bioengineered synthetic humans who have escaped to Earth.",
+        poster: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&w=800&q=80"
+      },
+      {
+        title: "Persona",
+        year: "1966",
+        director: "Ingmar Bergman",
+        genre: "Psychological Drama",
+        runtime: "84 mins",
+        ratio: "1.37 : 1",
+        rating: "4.4 / 5",
+        synopsis: "A young nurse is tasked with caring for an esteemed stage actress who has suddenly fallen completely mute, leading to an unsettling psychological entanglement.",
+        poster: "https://images.unsplash.com/photo-1517604931442-7e0c8ed2963c?auto=format&fit=crop&w=800&q=80"
+      }
+    ];
+
+    function renderFilm(film) {
+      document.getElementById('filmTitle').textContent = film.title;
+      document.getElementById('filmDirector').textContent = `Directed by ${film.director}`;
+      document.getElementById('filmGenre').textContent = film.genre;
+      document.getElementById('filmYear').textContent = film.year;
+      document.getElementById('filmSynopsis').textContent = film.synopsis;
+      document.getElementById('filmRuntime').textContent = film.runtime;
+      document.getElementById('filmRatio').textContent = film.ratio;
+      document.getElementById('filmRating').textContent = film.rating;
+      document.getElementById('filmPoster').src = film.poster;
+    }
+
+    function pickRandomFilm() {
+      const randomIndex = Math.floor(Math.random() * filmDatabase.length);
+      renderFilm(filmDatabase[randomIndex]);
+    }
+
+    // Load initial selection on page load
+    pickRandomFilm();
+  </script>
+</body>
+</html>
